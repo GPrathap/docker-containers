@@ -1,18 +1,22 @@
 Based on your preference you can run either run cpu or gpu docker container 
 
 ### To build the gpu docker container
-    ./gpu/build.sh 
+    cd gpu
+    ./build.sh 
 
 
 ### To run the gpu docker container
-    ./gpu/run.sh 
+    cd gpu
+    ./run.sh 
 
 ### To build the cpu docker container
-    ./cpu/build.sh 
+    cd cpu 
+    ./build.sh 
 
 
 ### To run the cpu docker container
-    ./cpu/run.sh 
+    cd cpu
+    ./run.sh 
 
 
 ## Some useful commands you may need
