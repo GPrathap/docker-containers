@@ -1,3 +1,4 @@
+docker stop cognitive_robotics_cpu
 docker rm cognitive_robotics_cpu
 docker run -it \
   -p 6080:6080 \
