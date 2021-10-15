@@ -1,1 +1,1 @@
-docker build -t prathap/cognitive-robotics:gpu .
+docker build -t prathap/cognitive_robotics_gpu:v1 .
