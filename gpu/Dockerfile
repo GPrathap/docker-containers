@@ -21,7 +21,6 @@ RUN apt-get update --fix-missing && apt-get install -y \
 ############################################
 WORKDIR /opt
 
-
 ############################################
 # OpenAI Gym
 ############################################
@@ -40,8 +39,6 @@ RUN pip3 install torch torchvision tensorflow-gpu==1.14 pandas filelock
 ############################################
 RUN pip3 install pybullet
 # RUN sed -i 's/robot_bases/pybullet_envs.robot_bases/' /usr/local/lib/python3.5/dist-packages/pybullet_envs/robot_locomotors.py
-
-
 
 ############################################
 # EvoRobotPy
@@ -66,7 +63,7 @@ RUN cd evorobotpy2/lib/ \
 RUN cd evorobotpy2/pybullet && echo "$(echo -n '#'; cat init.py)" > init.py \
     && sed -i -z 's/$/\n/g' /usr/local/lib/python3.6/dist-packages/pybullet_envs/__init__.py \
     && cat init.py >> /usr/local/lib/python3.6/dist-packages/pybullet_envs/__init__.py \
-    && cp gym_locomotion_envs2.py robot_locomotors.py /usr/local/lib/python3.6/dist-packages/pybullet_envs/
+    && cp gym_locomotion_envs2.py robot_locomotors.py robot_locomotors2.py /usr/local/lib/python3.6/dist-packages/pybullet_envs/
 
 ############################################
 # Jupyter Notebook
@@ -75,10 +72,12 @@ RUN pip3 install notebook
 
 ############################################
 # Deep Reinforcement Learning
-#    OpenAI Baselines
+#    OpenAI Baselines 
 ############################################
 # Need to remove mujoco dependency from baselines
 RUN git clone https://github.com/openai/baselines.git \
     && sed --in-place 's/mujoco,//' baselines/setup.py \
     && cd baselines && pip3 install -e . \
     && pip3 install mpi4py cloudpickle
+
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
