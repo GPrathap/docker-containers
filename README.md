@@ -17,6 +17,11 @@ Based on your preference you can run either run cpu or gpu docker container
 ### To run the cpu docker container
     cd cpu
     ./run.sh 
+    
+### To test the docker container 
+    cd /opt/evorobotpy2/xpendulum
+  
+    python ../bin/es.py -f pendulum.ini -s 1 -p
 
 
 ## Some useful commands you may need
