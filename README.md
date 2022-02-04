@@ -33,6 +33,9 @@ Based on your preference you can run either run cpu or gpu docker container
 ## If you dont like to build any of the containers, you may pull 
     docker pull prathap/cognitive_robotics_cpu:v1 
     docker pull prathap/cognitive_robotics_gpu:v1
+    or 
+    ./cognitive_robotics_gpu_docker.sh 
+    ./cognitive_robotics_cpu_docker.sh 
 
 ### Acknowledgement 
 Initially these scripts were written by @vladkurenkov
