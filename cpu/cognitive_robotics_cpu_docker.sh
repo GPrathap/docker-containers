@@ -1,0 +1,91 @@
+#!/bin/bash
+
+DOCKER_IMG="prathap/cognitive_robotics_cpu:v1"
+DOCKER_CONATINER_NAME="cognitive_robotics_cpu"
+HOME_DIRECTORY="/home/$USER/cognitive_robotics_cpu"
+
+docker_run() {
+  # if cognitive_robotics_cpu_home directory presents
+  if [ -d "$HOME_DIRECTORY" ]; then
+    # docker run
+    CONTAINER_ID=$(docker run -it --detach \
+        -v "/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+        -v "/home/$USER/.ssh:/home/developer/.ssh" \
+        -e DISPLAY=$DISPLAY  \
+        -e QT_X11_NO_MITSHM=1 \
+        --net=host \
+        --privileged \
+        --runtime=nvidia \
+        --name $DOCKER_CONATINER_NAME \
+      $DOCKER_IMG)
+
+    # X forwarding
+    host=$(docker inspect --format='{{ .Config.Hostname }}' $DOCKER_CONATINER_NAME)
+    xhost +local:$host
+
+    # check if the docker is running
+    if [ "$(docker inspect --format='{{.State.Running}}' $CONTAINER_ID)" = "true" ]; then
+      echo "$DOCKER_IMG startup completed
+      $DOCKER_IMG has been started, enter using: bash cognitive_robotics_cpu_docker.sh enter"
+    else
+      echo "ERROR: Failed to start $DOCKER_IMG"
+    fi
+  else
+    echo "cognitive_robotics_cpu_home directory is not available
+    create a directory 'cognitive_robotics_cpu_home' in '/home/$USER'"
+  fi
+}
+
+docker_enter() {
+  # docker exec
+  docker exec -ti  $DOCKER_CONATINER_NAME bash -li
+}
+
+docker_start() {
+  # docker exec
+  docker start $DOCKER_CONATINER_NAME
+}
+
+
+docker_stop() {
+  docker stop -t 0 $DOCKER_CONATINER_NAME
+}
+
+if [ "$1" = "run" ]; then
+  # if container is already Running
+  if docker ps --format '{{.Names}}' | grep -q $DOCKER_CONATINER_NAME; then
+    # if requested to restart
+    if [ "$2" = "-f" ]; then
+      # stop the container
+      docker_stop
+    else
+      echo "ERROR: $DOCKER_IMG is already running.
+      Use bash cognitive_robotics_cpu_docker.sh enter to enter
+      or
+      Use bash cognitive_robotics_cpu_docker.sh start -f to restart."
+      # exit from here
+      exit
+    fi
+  fi
+  echo "Starting $DOCKER_IMG container"
+  docker_run
+elif [ "$1" = "start" ]
+then
+  docker_start
+elif [ "$1" = "enter" ]
+then
+  docker_enter
+elif [ "$1" = "stop" ]
+then
+  docker_stop
+else
+  echo "Options:
+  --help     Show this message and exit.
+
+Commands:
+  run  Start cognitive_robotics_cpu docker environment.
+  start  Start cognitive_robotics_cpu docker environment.
+  enter  Enter cognitive_robotics_cpu docker environment.
+  stop   Stop cognitive_robotics_cpu docker environment."
+fi
+
